@@ -68,25 +68,24 @@ class MyApp(QWidget):
         if(self.directoryname):
             # 确认按钮事件处理
             print('Confirmed')
-            filenames = os.listdir(self.directoryname) #D:/大三下课程资料/嵌入式/PPT里面是xxx.ppt
+            filenames = [filename for filename in os.listdir(self.directoryname) if filename.endswith('ppt') or filename.endswith('pptx')] #D:/大三下课程资料/嵌入式/PPT里面是xxx.ppt
             # for循环依次访问指定目录的所有文件名
+            # 对listdir读取的文件进行按照数字进行排序处理
+            filenames.sort(key= lambda x:int(x.split('.')[0]))
             for filename in filenames:
-                print(filename)
-            # 判断文件的类型，对所有的ppt文件进行处理(ppt文件以ppt或者pptx结尾的)
-                if filename.endswith('ppt') or filename.endswith('pptx'):
-                    print(filename)           # PPT.pptx -> PPT.pdf
-                    # 将filename以.进行分割，返回2个信息，文件的名称和文件的后缀名
-                    base, ext = filename.split('.')  # base=PPT素材1 ext=pdf
-                    new_name = base + '.pdf'         # PPT素材1.pdf
-                    # ppt文件的完整位置:D:/大三下课程资料/嵌入式/PPT/xxx.ppt
-                    filename = self.directoryname + '/' + filename
-                    #print(filename)
-                    # pdf文件的完整位置:D:/大三下课程资料/嵌入式/PDF/xxx.pdf
-                    output_filename = self.directoryname + '/PDF/' + new_name
-                    output_filename = output_filename.replace('/',"\\")
-                    #print(output_filename)
-                    # 将ppt转成pdf文件
-                    self.ppt2pdf(filename, output_filename)
+                print(filename)           # PPT.pptx -> PPT.pdf
+                # 将filename以.进行分割，返回2个信息，文件的名称和文件的后缀名
+                base, ext = filename.split('.')  # base=PPT素材1 ext=pdf
+                new_name = base + '.pdf'         # PPT素材1.pdf
+                # ppt文件的完整位置:D:/大三下课程资料/嵌入式/PPT/xxx.ppt
+                filename = self.directoryname + '/' + filename
+                #print(filename)
+                # pdf文件的完整位置:D:/大三下课程资料/嵌入式/PDF/xxx.pdf
+                output_filename = self.directoryname + '/PDF/' + new_name
+                output_filename = output_filename.replace('/',"\\")
+                #print(output_filename)
+                # 将ppt转成pdf文件
+                self.ppt2pdf(filename, output_filename)
         else:
             print("还没有选择存放ppt的路径")
     def ppt2pdfandmergeUI(self):
@@ -99,7 +98,8 @@ class MyApp(QWidget):
             newdirectoryname = self.directoryname + '/PDF'
             filenames = [filename for filename in os.listdir(newdirectoryname) if filename.endswith(".pdf")]  #D:/大三下课程资料/嵌入式/PPT里面是xxx.ppt
             # for循环依次访问指定目录的所有文件名
-            
+            #对listdir读取的文件按照数字进行排序
+            filenames.sort(key= lambda x:int(x.split('.')[0]))
             #创建一个PdfMerger对象
             merger = PdfMerger()
  
